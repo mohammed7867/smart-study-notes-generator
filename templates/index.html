@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Smart Study Notes Generator</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            min-height: 100vh;
+            color: #ffffff;
+
+            background:
+                radial-gradient(circle at 10% 20%, rgba(108, 76, 241, 0.45), transparent 30%),
+                radial-gradient(circle at 90% 10%, rgba(0, 198, 255, 0.35), transparent 28%),
+                radial-gradient(circle at 80% 85%, rgba(236, 72, 153, 0.30), transparent 30%),
+                linear-gradient(135deg, #080b1f, #11183a 50%, #090d24);
+
+            padding: 40px 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1050px;
+            margin: auto;
+        }
+
+        /* HEADER */
+
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 8px 18px;
+            border-radius: 50px;
+
+            background: linear-gradient(
+                90deg,
+                rgba(108, 76, 241, 0.25),
+                rgba(0, 198, 255, 0.20)
+            );
+
+            border: 1px solid rgba(255,255,255,0.15);
+
+            color: #bfefff;
+            font-size: 14px;
+            font-weight: 600;
+
+            letter-spacing: 1px;
+
+            margin-bottom: 18px;
+        }
+
+        h1 {
+            font-size: 48px;
+            font-weight: 800;
+            line-height: 1.1;
+
+            background: linear-gradient(
+                90deg,
+                #ffffff,
+                #b99cff,
+                #5ddcff,
+                #ffffff
+            );
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            margin-top: 15px;
+            color: #b7bfdc;
+            font-size: 17px;
+        }
+
+        /* MAIN CARD */
+
+        .main-card {
+            background: rgba(255,255,255,0.075);
+
+            border: 1px solid rgba(255,255,255,0.14);
+
+            border-radius: 25px;
+
+            padding: 32px;
+
+            backdrop-filter: blur(20px);
+
+            box-shadow:
+                0 25px 70px rgba(0,0,0,0.35),
+                inset 0 1px 0 rgba(255,255,255,0.08);
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 14px;
+        }
+
+        /* TEXTAREA */
+
+        textarea {
+            width: 100%;
+            min-height: 230px;
+
+            resize: vertical;
+
+            padding: 20px;
+
+            border-radius: 17px;
+
+            border: 1px solid rgba(255,255,255,0.15);
+
+            background: rgba(5,8,25,0.75);
+
+            color: #f8fafc;
+
+            font-family: inherit;
+            font-size: 16px;
+
+            line-height: 1.7;
+
+            outline: none;
+
+            transition: 0.3s;
+        }
+
+        textarea::placeholder {
+            color: #727b9d;
+        }
+
+        textarea:focus {
+            border-color: #7c5cff;
+
+            box-shadow:
+                0 0 0 3px rgba(124,92,255,0.15),
+                0 0 30px rgba(124,92,255,0.12);
+        }
+
+        .input-footer {
+            display: flex;
+            justify-content: space-between;
+
+            margin-top: 10px;
+
+            color: #7f8aaa;
+
+            font-size: 13px;
+        }
+
+        /* BUTTON */
+
+        .button-area {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        button {
+            border: none;
+
+            padding: 15px 32px;
+
+            border-radius: 12px;
+
+            color: white;
+
+            font-size: 16px;
+            font-weight: 700;
+
+            cursor: pointer;
+
+            background: linear-gradient(
+                90deg,
+                #6c4cf1,
+                #2f80ed,
+                #00c6ff
+            );
+
+            box-shadow:
+                0 10px 30px rgba(47,128,237,0.3);
+
+            transition: 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 15px 40px rgba(0,198,255,0.35);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        /* RESULT */
+
+        .result {
+            margin-top: 45px;
+
+            padding-top: 35px;
+
+            border-top: 1px solid rgba(255,255,255,0.10);
+        }
+
+        .result-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            margin-bottom: 18px;
+
+            font-size: 25px;
+        }
+
+        .ai-icon {
+            width: 40px;
+            height: 40px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 12px;
+
+            background: linear-gradient(
+                135deg,
+                #6c4cf1,
+                #ec4899
+            );
+
+            box-shadow:
+                0 5px 20px rgba(108,76,241,0.3);
+        }
+
+        /* SUMMARY BOX */
+
+        .summary-box {
+            padding: 25px;
+
+            border-radius: 18px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(108,76,241,0.14),
+                    rgba(0,198,255,0.10)
+                );
+
+            border: 1px solid rgba(124,92,255,0.25);
+
+            color: #e8ecff;
+
+            font-size: 16px;
+
+            line-height: 1.8;
+
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,0.05);
+        }
+
+        /* STATISTICS */
+
+        .stats {
+            display: grid;
+
+            grid-template-columns: repeat(3, 1fr);
+
+            gap: 18px;
+
+            margin-top: 22px;
+        }
+
+        .stat-card {
+            padding: 25px 15px;
+
+            text-align: center;
+
+            border-radius: 18px;
+
+            background: rgba(255,255,255,0.055);
+
+            border: 1px solid rgba(255,255,255,0.12);
+
+            transition: 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+
+            background: rgba(255,255,255,0.09);
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #aeb7d4;
+
+            margin-bottom: 10px;
+        }
+
+        .stat-number {
+            font-size: 34px;
+            font-weight: 800;
+        }
+
+        /* INDIVIDUAL COLORS */
+
+        .original .stat-number {
+            color: #5ddcff;
+        }
+
+        .summary-count .stat-number {
+            color: #b99cff;
+        }
+
+        .reduction .stat-number {
+            color: #ff72b6;
+        }
+
+        /* FOOTER */
+
+        .footer {
+            text-align: center;
+
+            margin-top: 30px;
+
+            color: #737d9e;
+
+            font-size: 13px;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 700px) {
+
+            body {
+                padding: 25px 12px;
+            }
+
+            h1 {
+                font-size: 34px;
+            }
+
+            .subtitle {
+                font-size: 15px;
+            }
+
+            .main-card {
+                padding: 20px;
+                border-radius: 20px;
+            }
+
+            textarea {
+                min-height: 200px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .result-title {
+                font-size: 21px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <div class="badge">
+            GENERATIVE AI • NLP
+        </div>
+
+        <h1>Smart Study Notes Generator</h1>
+
+        <p class="subtitle">
+            Transform lengthy text into concise, meaningful AI-generated summaries.
+        </p>
+
+    </div>
+
+
+    <!-- MAIN CARD -->
+
+    <div class="main-card">
+
+        <div class="section-title">
+            Enter Your Text
+        </div>
+
+        <form method="POST">
+
+            <textarea
+                id="textInput"
+                name="text"
+                placeholder="Paste your paragraph here and let AI create a concise summary..."
+                required
+            >{{ original_text }}</textarea>
+
+            <div class="input-footer">
+
+                <span>
+                    Paste a paragraph to get started
+                </span>
+
+                <span id="wordCounter">
+                    0 words
+                </span>
+
+            </div>
+
+            <div class="button-area">
+
+                <button type="submit">
+                    ✨ Generate Summary
+                </button>
+
+            </div>
+
+        </form>
+
+
+        <!-- RESULT -->
+
+        {% if summary %}
+
+        <div class="result">
+
+            <div class="result-title">
+
+                <div class="ai-icon">
+                    ✦
+                </div>
+
+                <strong>
+                    AI Generated Summary
+                </strong>
+
+            </div>
+
+
+            <div class="summary-box">
+
+                {{ summary }}
+
+            </div>
+
+
+            <!-- STATISTICS -->
+
+            <div class="stats">
+
+                <div class="stat-card original">
+
+                    <div class="stat-label">
+                        Original Word Count
+                    </div>
+
+                    <div class="stat-number">
+                        {{ original_count }}
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card summary-count">
+
+                    <div class="stat-label">
+                        Summary Word Count
+                    </div>
+
+                    <div class="stat-number">
+                        {{ summary_count }}
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card reduction">
+
+                    <div class="stat-label">
+                        Text Reduction
+                    </div>
+
+                    <div class="stat-number">
+                        {{ reduction }}%
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <div class="footer">
+        Powered by Python • Flask • Hugging Face Transformers
+    </div>
+
+</div>
+
+
+<script>
+
+    const textInput = document.getElementById("textInput");
+    const wordCounter = document.getElementById("wordCounter");
+
+    function updateWordCount() {
+
+        const text = textInput.value.trim();
+
+        if (text === "") {
+            wordCounter.textContent = "0 words";
+            return;
+        }
+
+        const words = text.split(/\s+/).length;
+
+        wordCounter.textContent =
+            words + (words === 1 ? " word" : " words");
+    }
+
+    textInput.addEventListener("input", updateWordCount);
+
+    updateWordCount();
+
+</script>
+
+</body>
+</html>

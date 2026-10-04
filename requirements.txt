@@ -1,5 +1,2 @@
 Flask
-transformers==4.57.1
-torch
-sentencepiece
-gunicorn
+huggingface_hub

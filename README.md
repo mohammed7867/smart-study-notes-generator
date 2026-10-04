@@ -55,3 +55,4 @@ smart-study-notes-generator/
 │
 └── templates/
     └── index.html
+
